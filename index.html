@@ -3,33 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Timer</title>
+    <title>Document</title>
     <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-   <div class="page">
-    <div class="my-timer">
-        <h1>timer</h1>
-        <div class="first_wrapper">
-            <div class="wrapper">
-                <div class="timer-numbers" id="timer">
-                    <div class="date">
-                        <span class="days">10</span>
-                        <span> days</span>
-                    </div>
-                    <div class="time">
-                        <span class="hours">11</span>
-                        <span>:</span>
-                        <span class="minutes">12</span>
-                        <span>:</span>
-                        <span class="seconds">14</span>
-                    </div>   
-                </div>
+    <button class="button">Get in touch</button>
+    <div class="overlay">
+        <div class="contact-form">
+            <div class="contact-form-title">
+                We Will Contact You
             </div>
+            <div class="status">Status</div>
+            <form id="form">
+                <input required type="email" placeholder="Your mail">
+                <input required type="tel" placeholder="Your phone">
+                <button class="submit" type="submit">Submit</button>
+            </form>
+            <button class="close">close</button>
         </div>
     </div>
-   </div>
+   
 <script src="js/script.js"></script>
 </body>
 </html>

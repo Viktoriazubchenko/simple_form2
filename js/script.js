@@ -1,61 +1,59 @@
-//1. Set the final time
-let deadline = '2021-08-05';
-//2. Counting d, h, m, s, remaining time
-function getTimeRemaining(endtime) {
-    let timeRemaining = Date.parse(endtime) - Date.parse(new Date());
-    let seconds = Math.floor((timeRemaining / 1000) % 60);
-    let minutes = Math.floor((timeRemaining / 1000 / 60) % 60);
-    let hours = Math.floor((timeRemaining / 1000 / 60 / 60) % 24);
-    let days = Math.floor((timeRemaining / 1000/ 60 / 60/ 24));
-//3. Creating the Object with all data, that will be returned by this function
-    return {
-        'total': timeRemaining,
-        'days': days,
-        'hours': hours,
-        'minutes': minutes,
-        'seconds': seconds
-    }
-}
-//4. Taking all stuff from HTML and setting interval
-function setTimer(id, endtime) {
-    let timer = document.getElementById(id);
-    let days = timer.querySelector('.days');
-    let hours = timer.querySelector('.hours');
-    let minutes = timer.querySelector('.minutes');
-    let seconds = timer.querySelector('.seconds');
-    let timeInterval = setInterval(updateTimer, 1000);
+window.addEventListener('DOMContentLoaded', function(){
+    let btnGet = document.querySelector('.button');
+    let overlay = document.querySelector('.overlay');
+    let close = document.querySelector('.close');
+    
 
-   
-    //5. Addind new data to HTML by changing text content
-    function updateTimer(){
-        //5.1 Calling function getTimeRemaining to get an Object with all our data
-        let timeRemaining = getTimeRemaining(endtime);
-        //6. Fixing ZERO problem
-        function addZero(num){
-            if (num <= 9 ){
-                return '0' + num;
+    btnGet.addEventListener('click', function(){
+        overlay.classList.add('show');
+        document.body.style.overflow = 'hidden';
+    });
+
+    close.addEventListener('click', function(){
+        overlay.classList.remove('show');
+        document.body.style.overflow = '';
+    });
+
+    let message = {
+        loading: 'Loading...',
+        success: 'Thank You! We will contact You in a minute.',
+        failure: 'Error occured. Please try again.'
+    };
+
+    let form = document.querySelector('#form');
+    let input = form.getElementsByTagName('input');
+    let statusMessage = document.querySelector('.status');
+
+    form.addEventListener('submit', function(event){
+        event.preventDefault();
+
+        let request = new XMLHttpRequest();
+        request.open('POST', 'server.php');
+        request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+        let formData = new FormData(form);
+
+        let obj = {};
+        formData.forEach(function(value, key) {
+            obj[key] = value;
+        });
+
+        let json = JSON.stringify(obj);
+
+        request.send(json);
+
+        request.addEventListener('readystatechange', function() {
+            if (request.readyState < 4) {
+                statusMessage.innerHTML = message.loading;
+            } else if(request.readyState === 4 && request.status == 200) {
+                statusMessage.innerHTML = message.success;
             } else {
-                return num;
+                statusMessage.innerHTML = message.failure;
             }
+        });
+
+        for (let i = 0; i < input.length; i++) {
+            input[i].value = '';
         }
-
-        days.textContent = addZero(timeRemaining.days);
-        hours.textContent = addZero(timeRemaining.hours);
-        minutes.textContent = addZero(timeRemaining.minutes);
-        seconds.textContent = addZero(timeRemaining.seconds);
-        //7. Unsetting timer, when final time comes
-        if (timeRemaining.total <= 0 ){
-            clearInterval(timeInterval);
-            days.textContent = '00';
-            hours.textContent = '00';
-            minutes.textContent = '00';
-            seconds.textContent = '00';
-        }
-
-    }
-}
-//8. Calling the function
-setTimer('timer', deadline);
-
-
-
+    });
+});
